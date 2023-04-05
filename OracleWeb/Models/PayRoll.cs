@@ -15,6 +15,8 @@ public partial class PayRoll
 
     public DateTime? DatePaid { get; set; }
 
+    public bool isDelete { get; set; } = false;
+
     public decimal? EmployeeId { get; set; }
 
     public virtual Employee? Employee { get; set; }

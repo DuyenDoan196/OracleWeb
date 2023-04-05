@@ -6,7 +6,7 @@ using OracleWeb.Response;
 
 namespace OracleWeb.Services
 {
-    public class EmployeeServices : IEmployeeServices//control .
+    public class EmployeeServices : IEmployeeServices
     {
         private readonly ModelContext _context;
         //contructor
@@ -33,9 +33,17 @@ namespace OracleWeb.Services
             }
         }
 
-        public Task DeleteEmployeeAsync(decimal id)
+        public async Task DeleteEmployeeAsync(decimal id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees
+                .Where(e => e.PositonId == id && e.isDelete != true)
+                .FirstOrDefaultAsync();
+            if (result == null)
+            {
+                throw new Exception("Not Found This Employee!");
+            }
+            result.isDelete = true;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<EmployeeResponse>> GetAllEmployeeAsync()
@@ -54,14 +62,42 @@ namespace OracleWeb.Services
             return employees;
         }
 
-        public Task<EmployeeResponse> GetEmployeeAsync(decimal id)
+        public async Task<EmployeeResponse> GetEmployeeAsync(decimal id)
         {
-            throw new NotImplementedException();
+            var employee = await _context.Employees
+                .Where(e=> e.PositonId == id && e.isDelete !=true)
+                .Include(e => e.Positon)
+                .Select(e => new EmployeeResponse
+                {
+                    Id = e.EmployeeId,
+                    Name = e.Name,
+                    Birth = e.Birth,
+                    Gender = e.Gender,
+                    Address = e.Address,
+                    PositionName = e.Positon.Name
+                }).FirstOrDefaultAsync();
+            if(employee == null)
+            {
+                throw new Exception("Not Found This Employeee!");
+            }    
+            return employee;
         }
 
-        public Task UpdateEmployeeAsync(decimal id, EmployeeRequest employee)
+        public async Task UpdateEmployeeAsync(decimal id, EmployeeRequest employee)
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees
+                .Where(e => e.PositonId == id && e.isDelete != true)
+                .FirstOrDefaultAsync();
+            if(result == null)
+            {
+                throw new Exception("Not Found This Employee!");
+            }
+            result.Name = employee.Name ?? result.Name;
+            result.Birth = employee.Birth ?? result.Birth;
+            result.Address = employee.Address ?? result.Address;
+            result.Gender = employee.Gender ?? result.Gender;
+            result.EmployeeId = employee.PositonId;
+            await _context.SaveChangesAsync();
         }
     }
 }

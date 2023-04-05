@@ -13,6 +13,8 @@ public partial class Timekeeping
 
     public decimal? TotalHours { get; set; }
 
+    public bool isDelete { get; set; } = false;
+
     public decimal? EmployeeId { get; set; }
 
     public virtual Employee? Employee { get; set; }

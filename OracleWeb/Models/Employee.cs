@@ -16,6 +16,8 @@ public partial class Employee
 
     public decimal? Gender { get; set; }
 
+    public bool isDelete { get; set; } = false;
+
     public decimal? PositonId { get; set; }
 
     public virtual ICollection<PayRoll> PayRolls { get; } = new List<PayRoll>();

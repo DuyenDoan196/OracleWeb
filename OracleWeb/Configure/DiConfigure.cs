@@ -12,10 +12,7 @@ namespace OracleWeb.Configure
             services.AddScoped<IPayrollServices, PayrollServices>();
             services.AddScoped<IPositionServices, PositionServices>();
             services.AddScoped<IEmployeeServices, EmployeeServices>();
-
-            //services.AddScoped<ITeacherService, TeacherService>();
-            //services.AddScoped<IStudentService, StudentService>();
-            //services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<ITimekeepingServices, TimekeepingServices>();
         }
     }
  }

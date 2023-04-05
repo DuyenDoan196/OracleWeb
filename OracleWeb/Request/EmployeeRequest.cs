@@ -10,6 +10,6 @@
 
         public decimal? Gender { get; set; }
 
-        public decimal? PositonId { get; set; }
+        public decimal PositonId { get; set; }
     }
 }

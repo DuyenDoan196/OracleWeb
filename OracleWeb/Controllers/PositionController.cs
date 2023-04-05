@@ -68,14 +68,16 @@ namespace OracleWeb.Controllers
         // POST: PositionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(PositionRequest collection)
         {
             try
             {
+                await _positionServices.UpdatePositionAsync(collection.Id, collection);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
+                ViewBag.Exception = ex;
                 return View();
             }
         }
@@ -89,15 +91,17 @@ namespace OracleWeb.Controllers
         // POST: PositionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(decimal id)
         {
             try
             {
+                await _positionServices.DeletePositionAsync(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Exception = ex;
+                return RedirectToAction(nameof(Index));
             }
         }
     }

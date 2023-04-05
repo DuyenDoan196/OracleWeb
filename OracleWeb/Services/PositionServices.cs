@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OracleWeb.Helper;
 using OracleWeb.Interfaces;
 using OracleWeb.Models;
 using OracleWeb.Request;
@@ -9,11 +10,9 @@ namespace OracleWeb.Services
     public class PositionServices : IPositionServices
     {
         private readonly ModelContext _context;
-        private readonly IEmployeeServices _employeeServices;
-        public PositionServices(ModelContext context, IEmployeeServices employeeServices)
+        public PositionServices(ModelContext context)
         {//contructor
             _context = context;
-            _employeeServices = employeeServices;   
         }
         public async Task CreatePositionAsync(PositionRequest position)
         {
@@ -21,6 +20,7 @@ namespace OracleWeb.Services
             {
                 var newPosition = new Positon
                 {
+                    PositonId = StringHepler.GenerateId(),
                     Name = position.Name,
                     Salary = position.Salary,
                 };
@@ -31,17 +31,19 @@ namespace OracleWeb.Services
 
         public async Task DeletePositionAsync(decimal id)
         {
-            var position = await _context.Positons.Where(p=>p.PositonId == id).FirstOrDefaultAsync();
+            var position = await _context.Positons.Where(p=>p.PositonId == id && p.isDelete != true).FirstOrDefaultAsync();
             if(position != null)
             {
-                _context.Positons.Remove(position);
+                position.isDelete = true;
                 await _context.SaveChangesAsync();
             }
+            throw new Exception("Can not found this position id :" + id);
         }
 
         public async Task<List<PositionResponse>> GetAllPositionAsync()
         {
             var positions = await _context.Positons
+                .Where(e=>e.isDelete != true)
                 .Include(e => e.Employees)
                 .Select(e => new PositionResponse
                 {
@@ -55,7 +57,7 @@ namespace OracleWeb.Services
         // sd hàm bất động bộ() dưới db lên
         public async Task<PositionResponse> GetPositionAsync(decimal id)
         {
-            var position = await _context.Positons.Where(p => p.PositonId == id)
+            var position = await _context.Positons.Where(p => p.PositonId == id && p.isDelete != true)
                 .Select(p => new PositionResponse
                 {
                     Name = p.Name,
@@ -72,7 +74,7 @@ namespace OracleWeb.Services
 
         public async Task UpdatePositionAsync(decimal id, PositionRequest position)
         {
-            var positionUpdate = await _context.Positons.Where( p => p.PositonId == id).FirstOrDefaultAsync();
+            var positionUpdate = await _context.Positons.Where( p => p.PositonId == id && p.isDelete != true).FirstOrDefaultAsync();
             if(positionUpdate != null)
             {
                 positionUpdate.Name = position.Name ?? positionUpdate.Name;

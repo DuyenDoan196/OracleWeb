@@ -11,5 +11,7 @@ public partial class Positon
 
     public decimal? Salary { get; set; }
 
+    public bool isDelete { get; set; } = false;
+
     public virtual ICollection<Employee> Employees { get; } = new List<Employee>();
 }

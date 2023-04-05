@@ -1,0 +1,65 @@
+﻿@model IEnumerable<OracleWeb.Models.PayRoll>
+
+@{
+    ViewData["Title"] = "IndexAsync";
+}
+
+<h1>IndexAsync</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalHourInAMonth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Coefficients)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatePaid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isDelete)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalHourInAMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Coefficients)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalSalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatePaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isDelete)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PayRollId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PayRollId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PayRollId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
